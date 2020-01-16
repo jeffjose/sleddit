@@ -957,6 +957,9 @@ $over18-border-color: #ea4335
         span.fav(on:click|stopPropagation|preventDefault="{function(){toggleSelected()}}")
           Icon(icon="{currpost.selected ? faFav : faUnFav}")
       | {currpost.title}
+      a(href='{currpost.subreddit}', rel="prefetch") {currpost.subreddit}
+      a(href='/r/gifs', rel="prefetch") /r/gifs
+      a(href='/r/comics', rel="prefetch") /r/comics
     .settings(class:hide="{uiVisible == false}")
       span.btn(on:click='{function() { toggleSettings()}}', class:showSettings='{showSettings}')
         Icon(icon="{faSettings}")

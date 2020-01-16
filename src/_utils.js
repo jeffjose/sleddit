@@ -92,6 +92,7 @@ export async function format(item) {
 
   let formatted = {
     id: item.data.id,
+    subreddit: `/r/${item.data.subreddit}`,
     title: item.data.title,
     permalink: item.data.permalink,
     over18: item.data.over_18,
