@@ -36,7 +36,7 @@ autoplayinterval.useLocalStorage(3);
 imageVideo.useLocalStorage(0);
 portraitLandscape.useLocalStorage(0);
 favorite.useLocalStorage({});
-over18.useLocalStorage(true);
+over18.useLocalStorage(1);
 multireddit.useLocalStorage({});
 prefetch.useLocalStorage(true);
 hires.useLocalStorage(false);
@@ -247,8 +247,15 @@ $: {
     downloadstr = `Download ${numFavorite} files`;
   }
   autoplaystr = `Autoplay is ${$autoplay ? "on" : "off"}`;
-  over18str = `nsfw is ${$over18 ? "on" : "off"}`;
   deepsearchstr = `Search for ${filterValue}`;
+
+  if ($over18 == 0) {
+    over18str = "nsfw off"
+  } else if ($over18 == 1) {
+    over18str = "nsfw on"
+  } else if ($over18 == 2) {
+    over18str = "nsfw only"
+  }
 
   if ($imageVideo == 0) {
     imageVideoStr = "Show both image and video"
@@ -311,10 +318,14 @@ $: {
 $: {
   let tmp = [];
 
-  if (!$over18) {
+  if ($over18 == 0) {
     tmp = posts.filter(item => item.over18 == false);
-  } else {
-    tmp = posts;
+  }
+  else if ($over18 == 1) {
+    tmp = posts
+  }
+  else if ($over18 == 2) {
+    tmp = posts.filter(item => item.over18 == true);
   }
 
   if (filterValue) {
@@ -506,8 +517,12 @@ function openDuplicates() {
 
 
 function toggleOver18() {
-  skipRenderVideo = true;
-  over18.set(!$over18);
+  $over18 = $over18 + 1
+
+  if ($over18 == 3) {
+    $over18 = 0
+  }
+  over18.set($over18);
 }
 
 function removeAllFavorite(removeAllFromLocalStorage) {
@@ -902,7 +917,7 @@ $isnotmulti-color: #34a853
             color: $over18-color
             margin: 0
             //margin-right: 13px
-            width: 35px
+            width: 58px
             font-family: "Roboto Condensed", sans-serif
             position: relative
             top: -1px
@@ -1255,7 +1270,7 @@ $isnotmulti-color: #34a853
             class:over18="{!$over18}",
             on:click="{toggleOver18}"
           )
-            p nsfw
+            p {over18str}
         .numswrapper
           +each('displayposts as post, i')
             span.nums(
